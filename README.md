@@ -1,2 +1,2 @@
-# MongoDB-Aggregations-Demystified
-MongoDB Aggregations Demystified, published by Packt
+# Practical MongoDB Aggregations
+Practical MongoDB Aggregations, published by Packt
