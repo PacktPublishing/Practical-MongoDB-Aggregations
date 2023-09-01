@@ -42,7 +42,7 @@ db.products.insertMany([
 
 // Define the pipeline
 var pipeline = [
-  // Search for DVDs where the description must contain "apocalyptic" but not "zombie"
+  // Search DVDs where desc must contain "apocalyptic" but not "zombie"
   {"$search": {
     "index": "default",    
     "compound": {
@@ -73,7 +73,7 @@ var pipeline = [
     }
   }},
 
-  // Capture the search relevancy score in the output and omit the _id field
+  // Capture search relevancy score in the output and omit the _id field
   {"$set": {
     "score": {"$meta": "searchScore"},
     "_id": "$$REMOVE",

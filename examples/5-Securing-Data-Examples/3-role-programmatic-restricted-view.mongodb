@@ -75,7 +75,13 @@ var pipeline = [
     "weight": {
       "$cond": {
         "if": {
-          "$eq": [{"$setIntersection": ["$$USER_ROLES.role", ["Doctor", "Nurse"]]}, []]
+          "$eq": [
+            {"$setIntersection": [
+              "$$USER_ROLES.role",
+              ["Doctor", "Nurse"]
+            ]},
+            []
+          ]
         },
         "then": "$$REMOVE",
         "else": "$weight"
@@ -86,7 +92,13 @@ var pipeline = [
     "medication": {
       "$cond": {
         "if": {
-          "$eq": [{"$setIntersection": ["$$USER_ROLES.role", ["Doctor"]]}, []]
+          "$eq": [
+            {"$setIntersection": 
+              ["$$USER_ROLES.role",
+              ["Doctor"]
+            ]},
+            []
+          ]
         },
         "then": "$$REMOVE",
         "else": "$medication"

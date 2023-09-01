@@ -40,10 +40,17 @@ var pipeline = [
     "further_info.item_qty": {"$toInt": "$further_info.item_qty"},
     "further_info.reported": {"$switch": {
       "branches": [
-        {"case": {"$eq": [{"$toLower": "$further_info.reported"}, "true"]}, "then": true},
-        {"case": {"$eq": [{"$toLower": "$further_info.reported"}, "false"]}, "then": false},
+        {"case": 
+          {"$eq": [{"$toLower": "$further_info.reported"}, "true"]}, 
+          "then": true
+        },
+        {"case": 
+          {"$eq": [{"$toLower": "$further_info.reported"}, "false"]}, 
+          "then": false
+        },
       ],
-      "default": {"$ifNull": ["$further_info.reported", "$$REMOVE"]},
+      "default": 
+        {"$ifNull": ["$further_info.reported", "$$REMOVE"]},
     }},     
   }},     
   

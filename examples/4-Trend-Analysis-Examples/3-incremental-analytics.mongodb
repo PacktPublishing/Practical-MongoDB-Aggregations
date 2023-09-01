@@ -99,13 +99,15 @@ function getDayAggPipeline(startDay, endDay) {
 //
 
 // Get the pipeline for the 1st day
-var pipeline = getDayAggPipeline("2021-02-01T00:00:00Z", "2021-02-02T00:00:00Z");
+var pipeline = getDayAggPipeline("2021-02-01T00:00:00Z",
+                                 "2021-02-02T00:00:00Z");
 
 // Run aggregation for 01-Feb-2021 orders & put result in summary collection
 db.orders.aggregate(pipeline);
 
 // Get the pipeline for the 2nd day
-var pipeline = getDayAggPipeline("2021-02-02T00:00:00Z", "2021-02-03T00:00:00Z");
+var pipeline = getDayAggPipeline("2021-02-02T00:00:00Z",
+                                 "2021-02-03T00:00:00Z");
 
 // Run aggregation for 02-Feb-2021 orders & put result in summary collection
 db.orders.aggregate(pipeline);
@@ -119,9 +121,10 @@ db.orders.insertOne(
 )
 
 // Get the pipeline for the 1st day again
-var pipeline = getDayAggPipeline("2021-02-01T00:00:00Z", "2021-02-02T00:00:00Z");
+var pipeline = getDayAggPipeline("2021-02-01T00:00:00Z", 
+                                 "2021-02-02T00:00:00Z");
 
-// Re-run aggregation for 01-Feb-2021 overwriting 1st record in summary collections
+// Re-run agg for 01-Feb-2021 overwriting 1st record in summary collection
 db.orders.aggregate(pipeline);
 
 // Execute the aggregation and print the result

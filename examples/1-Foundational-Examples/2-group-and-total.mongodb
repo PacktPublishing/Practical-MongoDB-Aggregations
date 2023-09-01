@@ -64,7 +64,7 @@ var pipeline = [
     },
   }},
   
-  // Sort by order date ascending (required to pick out 'first_purchase_date' below)
+  // Sort by order date ascending (to pick out 'first_purchase_date' below)
   {"$sort": {
     "orderdate": 1,
   }},      

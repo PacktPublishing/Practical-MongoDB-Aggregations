@@ -20,7 +20,7 @@ db.users.insertMany([
 
 // Define the pipeline
 var pipeline = [
-  // For each social network user, graph traverse their 'followed_by' list of people
+  // For each social network user, traverse their 'followed_by' people list
   {"$graphLookup": {
     "from": "users",
     "startWith": "$followed_by",
@@ -42,7 +42,7 @@ var pipeline = [
       "$map": {
         "input": "$extended_network",
         "as": "connection",
-        "in": "$$connection.name", // Just get name field from each array element
+        "in": "$$connection.name", // Get name field from each element
       }
     },    
   }},

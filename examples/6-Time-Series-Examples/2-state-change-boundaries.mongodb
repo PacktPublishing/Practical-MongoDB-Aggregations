@@ -2,7 +2,7 @@ db = db.getSiblingDB("book-state-change-boundaries");
 db.dropDatabase();
 
 // Use a time-series collection for optimal processing
-// NOTE: This command can be commented out and the full example will still work
+// NOTE: This command can be commented out & this example will still work
 db.createCollection("device_status", {
   "timeseries": {
     "timeField": "timestamp",
@@ -11,7 +11,7 @@ db.createCollection("device_status", {
   }
 });
 
-// Create compound index for 'partitionBy' & 'sortBy' in first $setWindowFields use
+// Create cmpnd idx for performance of partitionBy/sortBy of setWindowFields
 db.device_status.createIndex({"deviceID": 1, "timestamp": 1});
 
 // Insert 9 records into the deployments collection
@@ -65,7 +65,7 @@ db.device_status.insertMany([
 
 // Define the pipeline
 var pipeline = [
-  // Capture previous and next records' state into new fields in this current record
+  // Capture previous+next records' state into new fields in current record
   {"$setWindowFields": {
     "partitionBy": "$deviceID",
     "sortBy": {"timestamp": 1},    
@@ -85,9 +85,10 @@ var pipeline = [
     }
   }},
 
-  // Use current record's timestamp as "startTimestamp" only if state changed from
-  // previous record in series, and only set "endMarkerDate" to current record's
-  // timestamp if the state changes between current and next records in the series
+  // Use current record's timestamp as "startTimestamp" only if state
+  // changed from previous record in series, and only set "endMarkerDate"
+  // to current record's timestamp if the state changes between current
+  // and next records in the series
   {"$set": {
     "startTimestamp" : {
       "$cond": [
@@ -105,8 +106,9 @@ var pipeline = [
     },
   }},
   
-  // Only keep records where state has just changed or is just about to change (so
-  // mostly start/end pairs, but not always if state change only lasted one record)
+  // Only keep records where the state has just changed or is just about
+  // to change - therefore, this will be mostly start/end pairs, but not
+  // always, if the state change only lasted one record
   {"$match": {
     "$expr": {
       "$or": [     
@@ -116,8 +118,9 @@ var pipeline = [
     }
   }},    
   
-  // Set "nextMarkerDate" to the timestamp of the next record in the series (will
-  // be set to 'null' if no next record to indicate 'unbounded')
+  // Set "nextMarkerDate" to the timestamp of the next record in the
+  // series - this will be set to 'null', if there is no no next record,
+  // to indicate 'unbounded'
   {"$setWindowFields": {
     "partitionBy": "$deviceID",
     "sortBy": {"timestamp": 1},    
@@ -131,30 +134,41 @@ var pipeline = [
     }
   }},  
 
-  // Only keep records at the start of the state change boundaries (throw away
-  // matching pair end records, if any)
+  // Only keep records at the start of the state change boundaries (throw
+  // away matching pair end records, if any)
   {"$match": {
     "$expr": {
       "$ne": ["$state", "$previousState"],
     }
   }},
     
-  // If no boundary after this record (it's the last matching record in the series),
-  // set "endTimestamp" as unbounded (null)
-  // Otherwise, if this start boundary record was also an end boundary record (not
-  //  paired - only 1 record before state changed), set "endTimestamp" to end timestamp
-  // Otherwise, set "endTimestamp" to what was the captured timestamp from the original
-  //  matching pair in the series (where the end paired record has since been removed)
+  // If no boundary after this record (it's the last matching record in
+  // the series), set "endTimestamp" as unbounded (null).
+  //
+  // Otherwise, if this start boundary record was also an end boundary
+  // record (not paired - with only 1 record before state changed), set
+  // "endTimestamp" to end timestamp.
+  //
+  // Otherwise, set "endTimestamp" to what was the captured timestamp
+  // from the original matching pair in the series (where the end paired
+  // record has since been removed).
   {"$set": {
     "endTimestamp" : {
       "$switch": {
         "branches": [
           // Unbounded, so no final timestamp in series
-          {"case": {"$eq": [{"$type": "$nextMarkerDate"}, "null"]}, "then": null},  
-          // Use end timestamp from what was same end record as start record 
-          {"case": {"$ne": [{"$type": "$endMarkerDate"}, "missing"]}, "then": "$endMarkerDate"},  
+          {"case": 
+            {"$eq": [{"$type": "$nextMarkerDate"}, "null"]},
+            "then": null
+          },  
+          // Use end timestamp from what was same end record as start record
+          {"case": 
+            {"$ne": [{"$type": "$endMarkerDate"}, "missing"]},
+            "then": "$endMarkerDate"
+          },  
         ],
-        // Use timestamp from what was an end record paired with separate start record
+        // Use timestamp from what was an end record paired with
+        // separate start record
         "default": "$nextMarkerDate",  
       }
     },   

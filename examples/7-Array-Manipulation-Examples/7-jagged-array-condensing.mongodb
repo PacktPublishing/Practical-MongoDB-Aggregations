@@ -8,13 +8,13 @@ db.drugTrialResults.insertMany([
     "trial_name": "Clinical Trial for Drug A",
     "drug_name": "Drug A",
     "patientsWithAdministeredSessions": [
-      [30.3, 40.4, 50.3], // Patient1 sessions (effectiveness scores)
-      [55.5, 65.2, 75.4, 85.3], // Patient2 sessions (effectiveness scores)
-      [50.3, 66.4, 65.5, 87.6, 86.7], // Patient3 sessions (effectiveness scores)
-      [40.1, 50.2, 60.1, 70.3], // Patient4 sessions (effectiveness scores)
-      [45.6, 55.7, 55.6, 75.5, 85.3, 91.8], // Patient5 sessions (effectiveness scores)
-      [41.5, 40.2, 55.5, 65.3], // Patient6 sessions (effectiveness scores)
-      [38.4, 39.2, 47.9, 55.2], // Patient7 sessions (effectiveness scores)
+      [30.3, 40.4, 50.3], // Patient 1 sessions (effectiveness scores)
+      [55.5, 65.2, 75.4, 85.3], // Patient 2 sessions (effectiveness scores)
+      [50.3, 66.4, 65.5, 87.6, 86.7], // Patient 3 sessions (scores)
+      [40.1, 50.2, 60.1, 70.3], // Patient 4 sessions (effectiveness scores)
+      [45.6, 55.7, 55.6, 75.5, 85.3, 91.8], // Patient 5 sessions (scores)
+      [41.5, 40.2, 55.5, 65.3], // Patient 6 sessions (effectiveness scores)
+      [38.4, 39.2, 47.9, 55.2], // Patient 7 sessions (effectiveness scores)
     ]
   },
   {
@@ -22,11 +22,11 @@ db.drugTrialResults.insertMany([
     "trial_name": "Clinical Trial for Drug B",
     "drug_name": "Drug B",
     "patientsWithAdministeredSessions": [
-      [87.7, 80.6, 70.5, 60.4], // Patient1 sessions (effectiveness scores)
-      [81.3, 83.4, 75.2], // Patient2 sessions (effectiveness scores)
-      [70.3, 60.1], // Patient3 sessions (effectiveness scores)
-      [75.5, 65.8, 55.7], // Patient4 sessions (effectiveness scores)
-      [60.4, 60.6, 40.4, 30.3], // Patient5 sessions (effectiveness scores)
+      [87.7, 80.6, 70.5, 60.4], // Patient 1 sessions (effectiveness scores)
+      [81.3, 83.4, 75.2], // Patient 2 sessions (effectiveness scores)
+      [70.3, 60.1], // Patient 3 sessions (effectiveness scores)
+      [75.5, 65.8, 55.7], // Patient 4 sessions (effectiveness scores)
+      [60.4, 60.6, 40.4, 30.3], // Patient 5 sessions (effectiveness scores)
     ]
   },
 ]);
@@ -61,7 +61,7 @@ function condenseSubArraysToSumsAndCounts(arrayOfSubArraysRef) {
       "input": {"$range": [0, getLargestSubArraySize(arrayOfSubArraysRef)]},
       "as": "index",
       "in": {              
-        "$reduce": {  // Loop with refernce "this" through each outer array member
+        "$reduce": {  // Loop with ref "this" thru each outer array member
           "input": {
             "$range": [0, {"$size": arrayOfSubArraysRef}]
           },
@@ -80,7 +80,7 @@ function condenseSubArraysToSumsAndCounts(arrayOfSubArraysRef) {
                 ]}
               ]
             },
-            // Count the number of patients who conducted the Nth session
+            // Count number of patients who conducted the Nth session
             "count": {
               "$sum": [
                 "$$value.count", 
@@ -111,10 +111,11 @@ var pipeline = [
         "vars": {
           // Condense the sub-arrays into a single array of sums and counts
           "sessionsWithSumCountOfEffectiveness": 
-            condenseSubArraysToSumsAndCounts("$patientsWithAdministeredSessions"),
+            condenseSubArraysToSumsAndCounts(
+              "$patientsWithAdministeredSessions"),
         },
         "in": {
-          // Produce average score for the Nth session for all participating patients
+          // Create avg score for Nth session for all participating patients
           "$map": {
             "input": "$$sessionsWithSumCountOfEffectiveness",
             "in": {"$divide": ["$$this.sum", "$$this.count"]}

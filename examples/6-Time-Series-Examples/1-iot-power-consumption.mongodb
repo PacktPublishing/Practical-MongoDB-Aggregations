@@ -2,7 +2,7 @@ db = db.getSiblingDB("book-iot-power-consumption");
 db.dropDatabase();
 
 // Use a time-series collection for optimal processing
-// NOTE: This command can be commented out and the full example will still work
+// NOTE: This command can be commented out & this example will still work
 db.createCollection("device_readings", {
   "timeseries": {
     "timeField": "timestamp",
@@ -11,7 +11,7 @@ db.createCollection("device_readings", {
   }
 });
 
-// Create compound index to aid performance for partitionBy & sortBy of setWindowFields
+// Create cmpnd idx for performance of partitionBy/sortBy of setWindowFields
 db.device_readings.createIndex({"deviceID": 1, "timestamp": 1});
 
 // Insert 18 records into the device readings collection
@@ -139,7 +139,7 @@ db.device_readings.insertMany([
 
 // Define the pipeline
 var pipelineBuildingsSummary = [
-  // Calculate each unit's energy consumed over the last hour for each reading
+  // Calculate each unit's energy consumed over last hour for each reading
   {"$setWindowFields": {
     "partitionBy": "$deviceID",
     "sortBy": {"timestamp": 1},    
@@ -184,7 +184,12 @@ var pipelineBuildingsSummary = [
   {"$group": {
     "_id": {
       "buildingID": "$buildingID",
-      "dayHour": {"$dateToString": {"format": "%Y-%m-%d  %H", "date": "$_id.date"}},
+      "dayHour": {
+        "$dateToString": {
+          "format": "%Y-%m-%d  %H",
+          "date": "$_id.date"
+        }
+      },
     },
     "consumedKilowattHours": {"$sum": "$consumedKilowattHours"},
   }},    

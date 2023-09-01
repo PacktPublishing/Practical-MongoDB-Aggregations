@@ -60,28 +60,29 @@ db.performance_test_results.insertMany([
 // Define the two macro functions
 //
 
-// Macro function to generate a complex aggregation expression for sorting an array
-// This function isn't required for MongoDB version 5.2+ due to the new $sortArray operator
+// Macro function to generate a complex aggregation expression for sorting
+// an array - this function isn't required for MongoDB version 5.2+ due to
+// the new $sortArray operator
 function sortArray(sourceArrayField) {
   return {
-    // GENERATE BRAND NEW ARRAY TO CONTAIN THE ELEMENTS FROM SOURCE ARRAY BUT NOW SORTED
+    // GENERATE NEW ARRAY TO CONTAIN ELEMENTS FROM SOURCE ARRAY BUT SORTED
     "$reduce": {
       "input": sourceArrayField, 
-      "initialValue": [],  // THE FIRST VERSION OF TEMP SORTED ARRAY WILL BE EMPTY
+      "initialValue": [],  // 1st VERSION OF TEMP SORTED ARRAY WILL BE EMPTY
       "in": {
         "$let": {
-          "vars": {  // CAPTURE $$this & $$value FROM OUTER $reduce BEFORE OVERRIDDEN
+          "vars": {  // CAPTURE $$this & $$value FROM OUTER $reduce
             "resultArray": "$$value",
             "currentSourceArrayElement": "$$this"
           },   
           "in": {
             "$let": {
               "vars": { 
-                // FIND EACH SOURCE ARRAY'S CURRENT ELEMENT POSITION IN NEW SORTED ARRAY
+                // FIND EACH SOURCE ARRAY'S CURRENT ELEM POS IN SORTED ARRAY
                 "targetArrayPosition": {
                   "$reduce": { 
-                    "input": {"$range": [0, {"$size": "$$resultArray"}]},  // "0,1,2.."
-                    "initialValue": {  // INITIALISE SORTED POSITION TO BE LAST ARRAY ELEMENT
+                    "input": {"$range": [0, {"$size": "$$resultArray"}]},
+                    "initialValue": {  // INIT SORTED POS TO BE LAST ELEMNT
                       "$size": "$$resultArray"
                     },
                     "in": {  // LOOP THRU "0,1,2..."
@@ -90,23 +91,23 @@ function sortArray(sourceArrayField) {
                           "$$currentSourceArrayElement",
                           {"$arrayElemAt": ["$$resultArray", "$$this"]}
                         ]}, 
-                        {"$min": ["$$value", "$$this"]},  // ONLY USE IF LOW VAL NOT YET FOUND
-                        "$$value"  // RETAIN INITIAL VAL AGAIN AS NOT YET FOUND CORRECT POSTN
+                        {"$min": ["$$value", "$$this"]}, // IF NOT YET FOUND
+                        "$$value"  // RETAIN INIT VAL AS NOT YET FOUND POSTN
                       ]
                     }
                   }
                 }
               },
               "in": {
-                // BUILD NEW SORTED ARRAY BY SLICING OLDER ONE & INSERTING NEW ELEMENT BETWEEN
+                // BUILD NEW ARRAY BY SLICING OLDER 1 INSERT NEW ELM BETWEEN
                 "$concatArrays": [
-                  {"$cond": [  // RETAIN THE EXISTING FIRST PART OF THE NEW ARRAY
+                  {"$cond": [  // RETAIN THE EXISTING 1st PART OF NEW ARRAY
                     {"$eq": [0, "$$targetArrayPosition"]}, 
                     [],
                     {"$slice": ["$$resultArray", 0, "$$targetArrayPosition"]},
                   ]},
-                  ["$$currentSourceArrayElement"],  // PULL IN THE NEW POSITIONED ELEMENT
-                  {"$cond": [  // RETAIN THE EXISTING LAST PART OF THE NEW ARRAY
+                  ["$$currentSourceArrayElement"],  // PULL IN NEW ELEMENT
+                  {"$cond": [  // RETAIN EXISTING LAST PART OF NEW ARRAY
                     {"$gt": [{"$size": "$$resultArray"}, 0]}, 
                     {"$slice": [
                       "$$resultArray",
@@ -125,20 +126,22 @@ function sortArray(sourceArrayField) {
   };
 }
 
-// Macro function to find nth percentile element of a sorted version of an array
+// Macro function to find nth percentile element of sorted version of array
 function arrayElemAtPercentile(sourceArrayField, percentile) {
   return {    
     "$let": {
       "vars": {
         "sortedArray": sortArray(sourceArrayField), 
-        // Comment out the line above and uncomment the line below if running MDB 5.2 or greater
-        // "sortedArray": {"$sortArray": {"input": sourceArrayField, "sortBy": 1}},        
+        // Comment out the line above & uncomment lines below if MDB 5.2+
+        //"sortedArray": {
+        //  "$sortArray": {"input": sourceArrayField, "sortBy": 1}
+        //},        
       },
       "in": {         
-        "$arrayElemAt": [  // FIND ELEMENT OF ARRAY AT NTH PERCENTILE POSITION
+        "$arrayElemAt": [  // FIND ELEMENT OF ARRAY AT NTH PERCENTILE POS
           "$$sortedArray",
-          {"$subtract": [  // ARRAY IS 0-INDEX BASED SO SUBTRACT 1 TO GET POSITION
-            {"$ceil":  // FIND NTH ELEMENT IN THE ARRAY, ROUNDED UP TO NEAREST integer
+          {"$subtract": [  // ARRAY IS 0-INDEX BASED: SUBTRACT 1 TO GET POS
+            {"$ceil":  // FIND NTH ELEME IN ARRAY ROUNDED UP TO NEAREST INT
               {"$multiply": [
                 {"$divide": [percentile, 100]},
                 {"$size": "$$sortedArray"}
@@ -157,13 +160,18 @@ var pipeline = [
   // Capture new fields for the ordered array + various percentiles
   {"$set": {
     "sortedResponseTimesMillis": sortArray("$responseTimesMillis"),
-    // Comment out the line above and uncomment the line below if running MDB 5.2 or greater
-    // "sortedResponseTimesMillis": {"$sortArray": {"input": "$responseTimesMillis", "sortBy": 1}},
-    "medianTimeMillis": arrayElemAtPercentile("$responseTimesMillis", 50),
-    "ninetiethPercentileTimeMillis": arrayElemAtPercentile("$responseTimesMillis", 90),
+    // Comment out the line above & uncomment lines below if MDB 5.2+
+    //"sortedResponseTimesMillis": {
+    //  "$sortArray": {"input": "$responseTimesMillis", "sortBy": 1}
+    //},
+    "medianTimeMillis":
+      arrayElemAtPercentile("$responseTimesMillis", 50),
+    "ninetiethPercentileTimeMillis": 
+      arrayElemAtPercentile("$responseTimesMillis", 90),
   }},
 
-  // Only show results for tests with slow latencies (i.e. 90th%-ile responses >100ms)
+  // Only show results for tests with slow latencies
+  // (i.e. 90th%-ile responses >100ms)
   {"$match": {
     "ninetiethPercentileTimeMillis": {"$gt": 100},
   }},

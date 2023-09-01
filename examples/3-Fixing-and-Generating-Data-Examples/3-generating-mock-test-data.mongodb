@@ -3,14 +3,46 @@ db.dropDatabase();
 
 // Insert 6 records into the 'source' collection
 db.source.insertMany([
-  {"key": "A", "datetime": ISODate("2009-04-27T00:00:00.000Z"), "progress": 1},
-  {"key": "B", "datetime": ISODate("2009-04-27T00:00:00.000Z"), "progress": 1},
-  {"key": "C", "datetime": ISODate("2009-04-27T00:00:00.000Z"), "progress": 1},
-  {"key": "D", "datetime": ISODate("2009-04-27T00:00:00.000Z"), "progress": 1},
-  {"key": "A", "datetime": ISODate("2023-07-31T06:59:59.000Z"), "progress": 9},
-  {"key": "B", "datetime": ISODate("2023-07-31T06:59:59.000Z"), "progress": 9},
-  {"key": "C", "datetime": ISODate("2023-07-31T06:59:59.000Z"), "progress": 9},
-  {"key": "D", "datetime": ISODate("2023-07-31T06:59:59.000Z"), "progress": 9},
+  {
+    "key": "A",
+    "datetime": ISODate("2009-04-27T00:00:00.000Z"), 
+    "progress": 1
+  },
+  {
+    "key": "B",
+    "datetime": ISODate("2009-04-27T00:00:00.000Z"),
+    "progress": 1
+  },
+  {
+    "key": "C",
+    "datetime": ISODate("2009-04-27T00:00:00.000Z"), 
+    "progress": 1
+  },
+  {
+    "key": "D", 
+    "datetime": ISODate("2009-04-27T00:00:00.000Z"), 
+    "progress": 1
+  },
+  {
+    "key": "A", 
+    "datetime": ISODate("2023-07-31T06:59:59.000Z"), 
+    "progress": 9
+  },
+  {
+    "key": "B", 
+    "datetime": ISODate("2023-07-31T06:59:59.000Z"), 
+    "progress": 9
+  },
+  {
+    "key": "C", 
+    "datetime": ISODate("2023-07-31T06:59:59.000Z"), 
+    "progress": 9
+  },
+  {
+    "key": "D", 
+    "datetime": ISODate("2023-07-31T06:59:59.000Z"), 
+    "progress": 9
+  },
 ]);
 
 // Define the pipeline

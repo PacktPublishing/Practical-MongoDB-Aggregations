@@ -7,7 +7,7 @@ db.persons.createIndex({"dateofbirth": -1});
 // Create index for non-$expr part of filter in MongoDB version < 5.0
 db.persons.createIndex({"gender": 1});
 
-// Create index for combination of $expr & non-$expr filter in MongoDB version >= 5.0
+// Create index for comnbo $expr & non-$expr filter in MDB version >= 5.0
 db.persons.createIndex({"gender": 1, "dateofbirth": -1});
 
 // Insert records into the persons collection
@@ -86,10 +86,13 @@ db.persons.insertMany([
 
 // Define the pipeline
 var pipeline = [
-  // Filter out any persons aged under 18 ($expr required to reference '$$NOW')
+  // Filter out any persons aged 18 ($expr required to reference '$$NOW')
   {"$match":
     {"$expr":{
-      "$lt": ["$dateofbirth", {"$subtract": ["$$NOW", 18*365.25*24*60*60*1000]}]
+      "$lt": [
+        "$dateofbirth",
+        {"$subtract": ["$$NOW", 18*365.25*24*60*60*1000]}
+      ]
     }},
   },
 

@@ -125,7 +125,7 @@ var pipeline = [
 
     // Group by price ranges
     "by_price": [
-      // Group into 3 ranges: inexpensive small price range to expensive large price range
+      // Group into 3: inexpensive small range to expensive large range
       {"$bucketAuto": {
         "groupBy": "$price",
         "buckets": 3,

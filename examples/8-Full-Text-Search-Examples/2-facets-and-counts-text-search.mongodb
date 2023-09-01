@@ -57,7 +57,7 @@ db.enquiries.insertMany([
 
 // Define the pipeline
 var pipeline = [
-  // For 1 day match 'fraud' enquiries, grouped into periods of the day, counting them
+  // For 1 day 'fraud' enquiries group into periods of the day counting them
   {"$searchMeta": {
     "index": "default",    
     "facet": {

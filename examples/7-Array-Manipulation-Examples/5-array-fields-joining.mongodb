@@ -48,8 +48,8 @@ db.users.insertMany([
 // Define the macro functions
 //
 
-// Macro function to generate a complex expression to get the array values of
-// named fields in a sub-document where each field's name is only known at runtime 
+// Macro function to generate a complex expression to get array values of
+// named fields in sub-doc where each field's name is only known at runtime
 function getValuesOfNamedFieldsAsArray(obj, fieldnames) {
   return {
     "$map": { 
@@ -67,7 +67,7 @@ function getValuesOfNamedFieldsAsArray(obj, fieldnames) {
 
 // Define the pipeline
 var pipeline = [
-  // Set a field with activities each user likes doing according to their mood
+  // Set field with activities each user likes doing according to their mood
   {"$set": {
     "moodActivities": {      
       "$arrayToObject": {
