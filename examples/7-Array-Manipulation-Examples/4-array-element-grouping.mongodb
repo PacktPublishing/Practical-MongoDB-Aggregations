@@ -119,11 +119,11 @@ function arrayGroupBySum(arraySubdocField, groupByKeyField, groupByValueField) {
 
 // Define the pipeline
 var pipeline = [
-  // Capture new fields grouping elements of each array and remove unwanted fields
+  // Capture new fields grouping elems of each array & remove unwanted fields
   {"$set": {
     "coinTypeAwardedCounts": arrayGroupByCount("rewards", "coin"),
     "coinTypeTotals": arrayGroupBySum("rewards", "coin", "amount"),
-    "_id": "$$REMOVE",
+    "_id": "$$REMOVE",e
     "rewards": "$$REMOVE",
   }},
 ];

@@ -40,15 +40,15 @@ var pipeline = [
     "readings_device_summary": {
       "$map": {
         "input": {
-          "$setUnion": "$readings.device" // Get only unique device ids
+          "$setUnion": "$readings.device"  // Get only unique device ids
         },
         "as": "device",
         "in": {
-          "$mergeObjects": { // Merge array of key:values into single object
+          "$mergeObjects": {  // Merge array of key:values into single object
             "$filter": {
-              "input": "$readings", // Iterate the "readings" array field
-              "as": "reading", // Name the current array element "reading"
-              "cond": { // Only include device props matching current device
+              "input": "$readings",  // Iterate the "readings" array field
+              "as": "reading",  // Name the current array element "reading"
+              "cond": {  // Only include device props matching current device
                 "$eq": ["$$reading.device", "$$device"]
               }
             }
