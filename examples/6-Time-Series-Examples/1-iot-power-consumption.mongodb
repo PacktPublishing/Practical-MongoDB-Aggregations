@@ -139,7 +139,7 @@ db.device_readings.insertMany([
 
 // Define the pipeline
 var pipelineBuildingsSummary = [
-  // Calculate each unit's energy consumed over last hour for each reading
+  // Calc each unit's energy consumed in last hour for each reading
   {"$setWindowFields": {
     "partitionBy": "$deviceID",
     "sortBy": {"timestamp": 1},    
