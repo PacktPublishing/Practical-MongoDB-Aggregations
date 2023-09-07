@@ -8,8 +8,6 @@ Officially endorsed by MongoDB, Inc., _Practical MongoDB Aggregations_ helps you
 
 The book is customized for developers, architects, data analysts, data engineers, and data scientists with some familiarity with the aggregation framework. It begins by explaining the framework's architecture and then shows you how to build pipelines optimized for productivity and scale. 
 
-Given the critical role arrays play in MongoDB's document model, the book delves into best practices for optimally manipulating arrays. The latter part of the book equips you with examples to solve common data processing challenges so you can apply the lessons you've learned to practical situations.
-
 ## Code Example Instructions
 
 You can find the code for each example in a sub-folder of this repository's `examples` folder. 
