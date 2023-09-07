@@ -6,7 +6,7 @@ Code examples for the second half of the book _Practical MongoDB Aggregations_, 
 
 Officially endorsed by MongoDB, Inc., _Practical MongoDB Aggregations_ helps you unlock the full potential of the MongoDB aggregation framework, including the latest features of MongoDB 7.0. The book provides practical, easy-to-digest principles and approaches for increasing your effectiveness in developing aggregation pipelines, supported by examples for building pipelines to solve complex data manipulation and analytical tasks.
 
-The book is customized for developers, architects, data analysts, data engineers, and data scientists with some familiarity with the aggregation framework. It begins by explaining the framework's architecture and then shows you how to build pipelines optimized for productivity and scale. 
+The book is aimed at developers, architects, data analysts, data engineers, and data scientists with some familiarity with the aggregation framework. . 
 
 ## Code Example Instructions
 
