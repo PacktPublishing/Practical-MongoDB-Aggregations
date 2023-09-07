@@ -19,7 +19,7 @@ You can run an example by copying and pasting the example's code into MongoDB Sh
 The following command line shows you how to run the first example via the MongoDB Shell as a script: 
 
 ```
-mongosh --quiet "mongodb+srv://myuser:mypasswd@mycluster.abc123.mongodb.net/" examples/1-Foundational-Examples/1-filtered-top-subset.mongodb.js
+mongosh --quiet "mongodb+srv://myuser:mypasswd@mycluster.abc123.mongodb.net/" Examples/Chapter-06-Foundational-Examples/1-filtered-top-subset.mongodb.js
 ```
 
 Before running this command, you must correct the username, password, and cluster domain name above to match your own environment.
