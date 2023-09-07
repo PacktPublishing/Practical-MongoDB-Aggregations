@@ -10,7 +10,7 @@ The book is aimed at developers, architects, data analysts, data engineers, and 
 
 ## Code Example Instructions
 
-You can find the code for each of the book's examples in a sub-folder of this repository's `examples` folder. 
+You can find the code for each of the book's examples in a sub-folder of this repository's `Examples` folder. 
 
 You can run an example by copying and pasting the example's code into MongoDB Shell, running the file as a MongoDB Shell script, or running in VSCode using the MongoDB for VScode Playground.
 
